@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center" style="color: #343a40;">Laporan</h1>
+    <p class="text-center" style="color: #6c757d;">Catatan aktivitas terkait produk: masuk, diubah, dihapus, dan lainnya.</p>
+
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>No.</th>
+                    <th>Aksi</th>
+                    <th>Nama Produk</th>
+                    <th>Kategori</th>
+                    <th>Detail</th>
+                    <th>Waktu</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if logs %}
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ log['action'] }}</td>
+                        <td>{{ log['product_name'] }}</td>
+                        <td>{{ log['category'] }}</td>
+                        <td>{{ log['details'] }}</td>
+                        <td>{{ log['timestamp'] }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak ada laporan aktivitas.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

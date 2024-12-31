@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center" style="color: #343a40;">Transaksi</h1>
+    <p class="text-center" style="color: #6c757d;">Membeli lebih mudah disini.</p>
+
+    <!-- Product Selection Form -->
+    <div class="mt-4">
+        <form action="/transactions" method="post" id="transaction-form">
+            <div class="mb-3">
+                <label for="product" class="form-label">Select Product:</label>
+                <select class="form-select" id="product" name="product_id" required>
+                    <option value="">-- Pilih Produk --</option>
+                    {% for product in products %}
+                    <option value="{{ product['id'] }}" data-stock="{{ product['stock'] }}" data-price="{{ product['price'] }}">
+                        {{ product['name'] }} ({{ product['category'] }}) - {{ product['price'] | round(2) }} Rp
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="quantity" class="form-label">Quantity:</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+                <small id="stock-info" class="form-text text-muted"></small>
+            </div>
+            <div class="mb-3">
+                <label for="total" class="form-label">Total Price:</label>
+                <input type="text" class="form-control" id="total" readonly>
+            </div>
+            <button type="submit" class="btn btn-primary">Complete Transaction</button>
+        </form>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="mt-5">
+        <h3 style="color: #343a40;">Transaksi Baru</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID Transaksi</th>
+                        <th>Produk</th>
+                        <th>Kategori</th>
+                        <th>Jumlah</th>
+                        <th>Total Harga</th>
+                        <th>Waktu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if transactions %}
+                        {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction['id'] }}</td>
+                            <td>{{ transaction['product_name'] }}</td>
+                            <td>{{ transaction['category'] }}</td>
+                            <td>{{ transaction['quantity'] }}</td>
+                            <td>{{ transaction['total_price'] | round(2) }} Rp</td>
+                            <td>{{ transaction['date'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">Tidak ada Transaksi yang dilakukan.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Update stock info and calculate total price
+    document.getElementById('product').addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const stock = selectedOption.getAttribute('data-stock');
+        const price = selectedOption.getAttribute('data-price');
+
+        document.getElementById('stock-info').textContent = `Available stock: ${stock}`;
+        document.getElementById('quantity').value = '';
+        document.getElementById('total').value = '';
+    });
+
+    document.getElementById('quantity').addEventListener('input', function () {
+        const quantity = this.value;
+        const selectedOption = document.getElementById('product').options[document.getElementById('product').selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
+        const stock = selectedOption.getAttribute('data-stock');
+
+        if (quantity > stock) {
+            alert('Pesanan melebihi batas!');
+            this.value = stock;
+        }
+
+        document.getElementById('total').value = (quantity * price).toFixed(2) + 'Rp';
+    });
+</script>
+{% endblock %}

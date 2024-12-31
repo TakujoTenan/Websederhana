@@ -1,0 +1,27 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+.navbar {
+    background-color: #343a40;
+}
+.navbar .nav-link {
+    color: #fff;
+}
+.navbar .nav-link:hover {
+    color: #ffc107;
+}
+footer {
+    background-color: #343a40;
+    color: #fff;
+    padding: 20px 0;
+}
+footer a {
+    color: #ffc107;
+    text-decoration: none;
+}
+footer a:hover {
+    text-decoration: underline;
+}
